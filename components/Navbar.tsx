@@ -47,6 +47,6 @@ const Navbar = async () => {
       </nav>
     </header>
   );
-};
+}; 
 
 export default Navbar;
