@@ -5,6 +5,8 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import { Author } from "@/sanity/type";
 import { Startup } from "@/sanity/type";
+import { Skeleton } from "./ui/skeleton";
+import { cn } from "@/lib/utils";
 
 
 export type StartupCardType = Omit<Startup, "author"> & {author?:Author}
@@ -41,7 +43,7 @@ const StartupCard = ({ post }: { post: StartupCardType }) => {
         <div className="flex items-center gap-3 mt-2">
           <Link href={`/user/${post?.author?._id}`}>
             <Image
-              src="https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg"
+              src={post?.author?.image || "/default-author-image.png"}
               alt="Author"
               width={36}
               height={36}
@@ -61,7 +63,7 @@ const StartupCard = ({ post }: { post: StartupCardType }) => {
       <p className="text-gray-700 text-sm mb-4 line-clamp-3">{post?.description}</p>
  
       {/* Tags */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4 text-blue-500 ">
       <Link href={`/?query=${post?.category?.toLowerCase()}`}>
           <p className="text-16-medium">{post?.category}</p>
         </Link>
@@ -69,12 +71,22 @@ const StartupCard = ({ post }: { post: StartupCardType }) => {
 
       {/* Call to Action */}
       <div className="text-right">
-        <Button className="bg-black">
+        <Button className="bg-black text-white hover:bg-gray-800 transition duration-300">
           <Link href={`/startup/${post._id}`}>View Details</Link>
         </Button>
       </div>
     </li>
   );
 };
+
+export const StartupCardSkeleton = () => (
+  <>
+    {[0, 1, 2, 3, 4].map((index: number) => (
+      <li key={cn("skeleton", index)}>
+        <Skeleton className="startup-card_skeleton" />
+      </li>
+    ))}
+  </>
+);
 
 export default StartupCard;

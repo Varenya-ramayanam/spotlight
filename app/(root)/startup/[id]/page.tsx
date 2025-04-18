@@ -1,20 +1,32 @@
-import { formatDate } from "@/lib/utils";
+import { Suspense } from "react";
 import { client } from "@/sanity/lib/client";
-import { STARTUP_BY_ID_QUERY } from "@/sanity/lib/queries";
+import {
+  PLAYLIST_BY_SLUG_QUERY,
+  STARTUP_BY_ID_QUERY,
+} from "@/sanity/lib/queries";
 import { notFound } from "next/navigation";
-import React, { Suspense } from "react";
+import { formatDate } from "@/lib/utils";
 import Link from "next/link";
+
+
 import markdownit from "markdown-it";
 import { Skeleton } from "@/components/ui/skeleton";
 import View from "@/components/View";
-
-export const experimental_ppr = true;
+import StartupCard, { StartupCardType } from "@/components/StartupCard";
 
 const md = markdownit();
 
-const page = async ({ params }: { params: Promise<{ id: string }> }) => {
+export const experimental_ppr = true;
+
+const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
-  const post = await client.fetch(STARTUP_BY_ID_QUERY, { id });
+
+  const [post, { select: editorPosts }] = await Promise.all([
+    client.fetch(STARTUP_BY_ID_QUERY, { id }),
+    client.fetch(PLAYLIST_BY_SLUG_QUERY, {
+      slug: "editor-picks-new",
+    }),
+  ]);
 
   if (!post) return notFound();
 
@@ -46,7 +58,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
           {/* Author and Category */}
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <Link
-              href={`/user/${post.author?.id}`}
+              href={`/user/${post.author?._id}`}
               className="flex items-center gap-4"
             >
               <img
@@ -77,6 +89,20 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
           )}
 
           <hr className="my-12 border-t" />
+          {/* Editor Picks */}
+          {editorPosts?.length > 0 && (
+            <div className="editor-picks max-w-4xl mx-auto">
+              <p className="text-2xl font-semibold text-gray-800">
+                Editor Picks
+              </p>
+
+              <ul className="card-grid mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {editorPosts.map((post: StartupCardType, i: number) => (
+                  <StartupCard key={i} post={post} />
+                ))}
+              </ul>
+            </div>
+          )}
 
           {/* Views */}
           <div className="fixed bottom-4 left z-50">
@@ -90,4 +116,4 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   );
 };
 
-export default page;
+export default Page;
