@@ -17,7 +17,7 @@ const Navbar = async () => {
         <div className="flex items-center gap-5 text-black font-medium">
           {session?.user ? (
             <>
-              <Link href="/startup/create">
+              <Link href="create">
                 <span>Create</span>
               </Link>
 
@@ -25,9 +25,9 @@ const Navbar = async () => {
                 "use server";
                 await signOut({ redirectTo: '/' }); // Redirect to home after sign out
               }}>
-                <button type="submit" className="font-medium bg-red-500 text-white px-4 py-2 rounded-md">
+                <Button type="submit" className="font-medium bg-red-500 text-white px-4 py-2 rounded-md">
                   Logout
-                </button>
+                </Button>
               </form>
 
               <Link href={`/user/${session.user.id}`} className="flex items-center gap-2">
