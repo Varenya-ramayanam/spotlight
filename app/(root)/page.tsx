@@ -1,38 +1,36 @@
+
 import SearchForm from "../../components/SearchForm";
-import StartupCard from "../../components/StartupCard";
+import StartupCard, { StartupCardType } from "../../components/StartupCard";
+import { STARTUPS_QUERY } from "@/sanity/lib/queries";
+import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 
 export default async function Home({
   searchParams,
 }: {
   searchParams: Promise<{ query?: string }>;
 }) {
-  const query = (await searchParams).query || "";
+  const query = (await searchParams).query;
 
-  const posts = [
-    {
-      _createdAt: new Date(),
-      views: 55,
-      author: {
-        _id: 1,
-        name: "John Doe",
-        image: "https://via.placeholder.com/150",
-      },
-      _id: 1,
-      description: "This is a test project that demonstrates how to use modern React components beautifully.",
-      image:
-        "https://images.pexels.com/photos/417074/pexels-photo-417074.jpeg?cs=srgb&dl=pexels-souvenirpixels-417074.jpg&fm=jpg",
-      title: "Test Project",
-      tags: ["test", "project"],
-    },
-  ];
+  const params = {search:query||null};
+
+
+
+  const { data: posts } = await sanityFetch({
+    query: STARTUPS_QUERY,
+    params
+  });
+  // console.log(JSON.stringify(posts, null, 2));
 
   return (
     <>
       {/* Hero Section */}
       <section className="flex flex-col items-center justify-center px-6 py-24 bg-gradient-to-br from-pink-500 to-red-400 text-white text-center">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4">Showcase Your Skills</h1>
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-4">
+          Showcase Your Skills
+        </h1>
         <p className="max-w-2xl text-lg md:text-xl mb-6">
-          Submit your ideas and projects to impress recruiters and land your dream job.
+          Submit your ideas and projects to impress recruiters and land your
+          dream job.
         </p>
         <SearchForm query={query} />
       </section>
@@ -59,6 +57,8 @@ export default async function Home({
           )}
         </ul>
       </section>
+
+      <SanityLive/>
     </>
   );
 }

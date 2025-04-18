@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { auth } from '@/auth';
 import { signIn, signOut } from '@/auth'; // Import from the correct server action path
+import { Button } from './ui/button';
 
 const Navbar = async () => {
   const session = await auth();
@@ -38,9 +39,9 @@ const Navbar = async () => {
               "use server";
               await signIn('github');
             }}>
-              <button type="submit" className="font-medium bg-blue-500 text-white px-4 py-2 rounded-md">
+              <Button type="submit" className="font-medium bg-blue-500 text-white px-4 py-2 rounded-md">
                 Login
-              </button>
+              </Button>
             </form>
           )}
         </div>

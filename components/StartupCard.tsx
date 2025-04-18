@@ -3,8 +3,14 @@ import { EyeIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { Author } from "@/sanity/type";
+import { Startup } from "@/sanity/type";
 
-const StartupCard = ({ post }: { post: StartupTypeCard }) => {
+
+export type StartupCardType = Omit<Startup, "author"> & {author?:Author}
+
+
+const StartupCard = ({ post }: { post: StartupCardType }) => {
   return (
     <li className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 max-w-md w-full">
       {/* Top Image */}
@@ -53,16 +59,12 @@ const StartupCard = ({ post }: { post: StartupTypeCard }) => {
 
       {/* Description */}
       <p className="text-gray-700 text-sm mb-4 line-clamp-3">{post?.description}</p>
-
+ 
       {/* Tags */}
       <div className="flex flex-wrap gap-2 mb-4">
-        {post?.tags?.map((tag: string) => (
-          <Link key={tag} href={`/?query=${tag}`}>
-            <span className="bg-blue-100 text-blue-700 text-xs font-medium px-2 py-1 rounded-full hover:bg-blue-200 transition">
-              #{tag}
-            </span>
-          </Link>
-        ))}
+      <Link href={`/?query=${post?.category?.toLowerCase()}`}>
+          <p className="text-16-medium">{post?.category}</p>
+        </Link>
       </div>
 
       {/* Call to Action */}
