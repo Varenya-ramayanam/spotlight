@@ -64,7 +64,7 @@ const StartupForm = () => {
       >
         <div className="text-center">
           <h2 className="text-4xl font-extrabold text-indigo-600">
-            🚀 Share Your Startup Idea
+            🚀 Share Your Project Idea
           </h2>
           <p className="mt-2 text-sm text-gray-500">
             Submit your project to inspire and collaborate
@@ -103,7 +103,7 @@ const StartupForm = () => {
             rows={3}
             className="w-full"
             required
-            placeholder="Short description of your startup"
+            placeholder="Short description of your Project"
           />
           {errors.description && (
             <p className="text-red-500 text-sm">{errors.description}</p>
